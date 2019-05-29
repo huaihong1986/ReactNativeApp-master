@@ -3,6 +3,7 @@ package com.example.song.reactnativeappdemo.hotupdate;
 import android.annotation.TargetApi;
 import android.os.Build;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,7 +17,7 @@ import java.util.LinkedList;
  * desc   :
  * version: 1.0
  */
-public class patch {
+public class Patch {
     public static void main(String[] args) {
         patch();
     }
@@ -47,6 +48,11 @@ public class patch {
     }
 
 
+    /**
+     * 将.pat文件转换为String
+     * @param patPath 下载的.pat文件所在目录
+     * @return
+     */
     public static String getStringFromPat(String patPath) {
 
         FileReader reader = null;
@@ -56,16 +62,17 @@ public class patch {
             int ch = reader.read();
             StringBuilder sb = new StringBuilder();
             while (ch != -1) {
-                sb.append((char) ch);
-                ch = reader.read();
-                reader.close();
-                result = sb.toString();
+                sb.append((char)ch);
+                ch  = reader.read();
             }
-            return result;
-        } catch (Exception e1) {
-            e1.printStackTrace();
+            reader.close();
+            result = sb.toString();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return "";
+        return result;
     }
 
 }

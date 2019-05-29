@@ -37,7 +37,7 @@ export default class HotRN extends Component {
     * 调用原生代码
     */
     skipNativeCall() {
-       let phone = '18101943536';
+       let phone = '17721168850';
        NativeModules.commModule.rnCallNative(phone);
     }
 
@@ -76,6 +76,7 @@ export default class HotRN extends Component {
          <Text style={styles.welcome} onPress={this.promiseComm.bind(this,'promise发送啦')}>
             Promise通信方式
          </Text>
+           <Image source={require('./images/ic_1.png')} />
       </View>
     );
   }

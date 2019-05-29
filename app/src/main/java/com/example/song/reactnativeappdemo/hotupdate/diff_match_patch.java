@@ -34,15 +34,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /*
- * Functions for diff, match and patch.
- * Computes the difference between two texts to create a patch.
- * Applies the patch onto another text, allowing for errors.
+ * Functions for diff, match and Patch.
+ * Computes the difference between two texts to create a Patch.
+ * Applies the Patch onto another text, allowing for errors.
  *
  * @author fraser@google.com (Neil Fraser)
  */
 
 /**
- * Class containing the diff, match and patch methods.
+ * Class containing the diff, match and Patch methods.
  * Also contains the behaviour settings.
  */
 public class diff_match_patch {
@@ -1717,7 +1717,7 @@ public class diff_match_patch {
   /**
    * Increase the context until it is unique,
    * but don't let the pattern expand beyond Match_MaxBits.
-   * @param patch The patch to grow.
+   * @param patch The Patch to grow.
    * @param text Source text.
    */
   protected void patch_addContext(Patch patch, String text) {
@@ -1834,7 +1834,7 @@ public class diff_match_patch {
     String postpatch_text = text1;
     for (Diff aDiff : diffs) {
       if (patch.diffs.isEmpty() && aDiff.operation != Operation.EQUAL) {
-        // A new patch starts here.
+        // A new Patch starts here.
         patch.start1 = char_count1;
         patch.start2 = char_count2;
       }
@@ -1855,22 +1855,22 @@ public class diff_match_patch {
       case EQUAL:
         if (aDiff.text.length() <= 2 * Patch_Margin
             && !patch.diffs.isEmpty() && aDiff != diffs.getLast()) {
-          // Small equality inside a patch.
+          // Small equality inside a Patch.
           patch.diffs.add(aDiff);
           patch.length1 += aDiff.text.length();
           patch.length2 += aDiff.text.length();
         }
 
         if (aDiff.text.length() >= 2 * Patch_Margin) {
-          // Time for a new patch.
+          // Time for a new Patch.
           if (!patch.diffs.isEmpty()) {
             patch_addContext(patch, prepatch_text);
             patches.add(patch);
             patch = new Patch();
-            // Unlike Unidiff, our patch lists have a rolling context.
+            // Unlike Unidiff, our Patch lists have a rolling context.
             // http://code.google.com/p/google-diff-match-patch/wiki/Unidiff
             // Update prepatch text & pos to reflect the application of the
-            // just completed patch.
+            // just completed Patch.
             prepatch_text = postpatch_text;
             char_count1 = char_count2;
           }
@@ -1886,7 +1886,7 @@ public class diff_match_patch {
         char_count2 += aDiff.text.length();
       }
     }
-    // Pick up the leftover patch if not empty.
+    // Pick up the leftover Patch if not empty.
     if (!patch.diffs.isEmpty()) {
       patch_addContext(patch, prepatch_text);
       patches.add(patch);
@@ -1939,8 +1939,8 @@ public class diff_match_patch {
 
     int x = 0;
     // delta keeps track of the offset between the expected and actual location
-    // of the previous patch.  If there are patches expected at positions 10 and
-    // 20, but the first patch was found at 12, delta is 2 and the second patch
+    // of the previous Patch.  If there are patches expected at positions 10 and
+    // 20, but the first Patch was found at 12, delta is 2 and the second Patch
     // has an effective expected position of 22.
     int delta = 0;
     boolean[] results = new boolean[patches.size()];
@@ -1959,7 +1959,7 @@ public class diff_match_patch {
               text1.substring(text1.length() - this.Match_MaxBits),
               expected_loc + text1.length() - this.Match_MaxBits);
           if (end_loc == -1 || start_loc >= end_loc) {
-            // Can't find valid trailing context.  Drop this patch.
+            // Can't find valid trailing context.  Drop this Patch.
             start_loc = -1;
           }
         }
@@ -1969,7 +1969,7 @@ public class diff_match_patch {
       if (start_loc == -1) {
         // No match found.  :(
         results[x] = false;
-        // Subtract the delta for this failed patch from subsequent patches.
+        // Subtract the delta for this failed Patch from subsequent patches.
         delta -= aPatch.length2 - aPatch.length1;
       } else {
         // Found a match.  :)
@@ -2110,7 +2110,7 @@ public class diff_match_patch {
         bigpatch = pointer.hasNext() ? pointer.next() : null;
         continue;
       }
-      // Remove the big old patch.
+      // Remove the big old Patch.
       pointer.remove();
       start1 = bigpatch.start1;
       start2 = bigpatch.start2;
@@ -2165,11 +2165,11 @@ public class diff_match_patch {
             }
           }
         }
-        // Compute the head context for the next patch.
+        // Compute the head context for the next Patch.
         precontext = diff_text2(patch.diffs);
         precontext = precontext.substring(Math.max(0, precontext.length()
             - Patch_Margin));
-        // Append the end context for this patch.
+        // Append the end context for this Patch.
         if (diff_text1(bigpatch.diffs).length() > Patch_Margin) {
           postcontext = diff_text1(bigpatch.diffs).substring(0, Patch_Margin);
         } else {
@@ -2231,7 +2231,7 @@ public class diff_match_patch {
       m = patchHeader.matcher(text.getFirst());
       if (!m.matches()) {
         throw new IllegalArgumentException(
-            "Invalid patch string: " + text.getFirst());
+            "Invalid Patch string: " + text.getFirst());
       }
       patch = new Patch();
       patches.add(patch);
@@ -2288,12 +2288,12 @@ public class diff_match_patch {
           // Minor equality.
           patch.diffs.add(new Diff(Operation.EQUAL, line));
         } else if (sign == '@') {
-          // Start of next patch.
+          // Start of next Patch.
           break;
         } else {
           // WTF?
           throw new IllegalArgumentException(
-              "Invalid patch mode '" + sign + "' in: " + line);
+              "Invalid Patch mode '" + sign + "' in: " + line);
         }
         text.removeFirst();
       }
@@ -2381,7 +2381,7 @@ public class diff_match_patch {
 
 
   /**
-   * Class representing one patch operation.
+   * Class representing one Patch operation.
    */
   public static class Patch {
     public LinkedList<Diff> diffs;
@@ -2422,7 +2422,7 @@ public class diff_match_patch {
       StringBuilder text = new StringBuilder();
       text.append("@@ -").append(coords1).append(" +").append(coords2)
           .append(" @@\n");
-      // Escape the body of the patch with %xx notation.
+      // Escape the body of the Patch with %xx notation.
       for (Diff aDiff : this.diffs) {
         switch (aDiff.operation) {
         case INSERT:
